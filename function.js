@@ -1,39 +1,102 @@
-//ejemplo 
-const nameInput = document.getElementById('nameInput');
-const colorPicker = document.getElementById('colorPicker');
-const banner = document.querySelector('.banner');
-const displayName = document.getElementById('displayName');
-const jobInput=document.getElementById('jobInput')
-const displayjob=document.querySelector('.card p');
-const fontPicker=document.getElementById('fontPicker');
-const card= document.getElementById('profileCard');
-const darkModeBtn=document.getElementById('darkModeBtn');
+document.addEventListener("DOMContentLoaded", function(){
 
+    const $ = (id) => document.getElementById(id);
 
+    function conectar(inputId, outputId){
+        $(inputId).addEventListener("input", function(){
+            $(outputId).textContent = this.value;
+        });
+    }
 
+    conectar("name", "outName");
+    conectar("role", "outRole");
+    conectar("email", "outEmail");
+    conectar("phone", "outPhone");
+    conectar("address", "outAddress");
+    conectar("about", "outAbout");
+    conectar("education", "outEducation");
+    conectar("experience", "outExperience");
 
-//actualizar el nombre a ingresar 
-nameInput.addEventListener('input',(e) => {
-	displayName.textContent = e.target.value || "escribe tu nombre aqui"   
+    $("skills").addEventListener("input", function(){
+        const lista = $("outSkills");
+        lista.innerHTML = "";
+        this.value.split(",").forEach(skill=>{
+            if(skill.trim() !== ""){
+                let li = document.createElement("li");
+                li.textContent = skill.trim();
+                lista.appendChild(li);
+            }
+        });
+    });
+
+    $("languages").addEventListener("input", function(){
+        const lista = $("outLanguages");
+        lista.innerHTML = "";
+        this.value.split(",").forEach(lang=>{
+            if(lang.trim() !== ""){
+                let li = document.createElement("li");
+                li.textContent = lang.trim();
+                lista.appendChild(li);
+            }
+        });
+    });
+
+    $("photo").addEventListener("change", function(e){
+        const reader = new FileReader();
+        reader.onload = function(){
+            $("outPhoto").src = reader.result;
+        }
+        if(e.target.files[0]){
+            reader.readAsDataURL(e.target.files[0]);
+        }
+    });
+
+    $("darkBtn").addEventListener("click", function(){
+        document.body.classList.toggle("dark-mode");
+
+        if(document.body.classList.contains("dark-mode")){
+        } else {
+            this.textContent = "🌙 Modo Oscuro";
+        }
+    });
+
 });
 
-//actualizar el cargo a ingresar
-jobInput.addEventListener('input',(e) => {
-	displayjob.textContent =e.target.value || "Desarrollador Wed"
-});
+function downloadPDF(){
 
-//actualizar color de fondo 
+    const element = document.getElementById("preview");
+    const container = document.querySelector(".container");
 
-colorPicker.addEventListener('input', (e) => {
-	banner.style.background = e.target.value;
-});
+    // Guardar estilos originales
+    const originalDisplay = container.style.display;
+    const originalJustify = container.style.justifyContent;
 
-//actualizar el tipo de letra
-fontPicker.addEventListener('change',(e)=>{
-	card.style.fontFamily=e.target.value;
-});
+    // Quitar centrado SOLO para el PDF
+    container.style.display = "block";
+    container.style.justifyContent = "flex-start";
 
-//Modo oscuro
-darkModeBtn.addEventListener('click',()=>{
-	card.classList.toggle('dark-mode');
-});
+    const options = {
+        margin: 0,
+        filename: "Mi_CV_Profesional.pdf",
+        image: { type: "jpeg", quality: 1 },
+        html2canvas: { 
+            scale: 3,
+            scrollY: 0
+        },
+        jsPDF: { 
+            unit: "mm",
+            format: "a4",
+            orientation: "portrait"
+        },
+        pagebreak: { mode: ['css', 'legacy'] }
+    };
+
+    html2pdf()
+        .set(options)
+        .from(element)
+        .save()
+        .then(() => {
+            // Restaurar estilos después
+            container.style.display = originalDisplay;
+            container.style.justifyContent = originalJustify;
+        });
