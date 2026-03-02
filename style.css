@@ -1,85 +1,64 @@
-:root {
-    --bg: #f4f4f4;
-    --text: #222;
-    --card: #ffffff;
-    --accent: #F5AEAE;
+body{
+	font-family:sans-serif;
+	display:flex;
+	justify-content:center;
+	align-items:center;
+	height:100vh;
+	background:#C9C9C9;
 }
 
-body.dark-mode {
-    --bg: #121212;
-    --text: #ffffff;
-    --card: #F5AEAE;
-    --accent: #F5AEAE;
+.container{
+	display:flex;
+	gap:40px;
+	align-items:center;
+	
 }
 
-body {
-    margin: 0;
-    font-family: calibri, sans-serif;
-    background: var(--bg);
-    color: var(--text);
+.card{
+	width:250px;
+	background:#3278C7;
+	border-radius:15px;
+	overflow:hidden;
+	box-shadow:0 10px 20px rgb(0, 0, 0, 0.5);
+	text-align:center;
+	padding-bottom:20px;
+
+}
+.banner{
+	height:80px;
+	background:#21548F;
+	
+}
+.avatar{
+	width: 80px;
+	height:80px;
+	background:#C9C9C9;
+	border: 2px solid white;
+	border-radius:50%;
+	margin:-40px auto 10px;
 }
 
-header {
-    text-align: center;
-    padding: 20px;
+.controls{
+	display: flex;
+	flex-direction:column;
+	gap:20px;
+
 }
 
-.container {
-    display: flex;
-    justify-content: center;
-    gap: 30px;
-    padding: 20px;
-    flex-wrap: wrap;
+input{
+	padding:10px;
+	border-radius:5px;
+	border: 1px solid #FFFFFF;
 }
+/*=MODO OSCURO=*/
 
-/* FORMULARIO */
-.form-section {
-    background: var(--card);
-    padding: 20px;
-    border-radius: 10px;
-    width: 350px;
+body.dark-mode .card {
+	background:#1e1e1e;
 }
-
-/* CV */
-.cv-template {
-    background: white;
-    color: black;
-    width: 210mm;
-    min-height: 297mm;
-    padding: 15mm;
-    box-sizing: border-box;
+body.dark-mode .avatar{
+	background:#444;
+	border: 2px solid white;
 }
-
-input, textarea {
-    width: 100%;
-    margin-bottom: 10px;
-    padding: 8px;
+body.dark-mode .banner{
+	background:#333;
 }
-
-button {
-    width: 100%;
-    padding: 10px;
-    border: none;
-    background: var(--accent);
-    color: white;
-    cursor: pointer;
-    font-weight: bold;
-}
-
-img {
-    width: 110px;
-    height: 110px;
-    border-radius: 50%;
-    object-fit: cover;
-}
-
-.section-title {
-    margin-top: 15px;
-    border-bottom: 2px solid #F5AEAE;
-}
-
-/* Ocultar formulario en PDF */
-@media print {
-    header, .form-section {
-        display: none;
-    }

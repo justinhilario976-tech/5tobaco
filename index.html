@@ -1,271 +1,42 @@
 <!DOCTYPE html>
-<html lang="es">
+<html>
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Formulario Para Curriculum</title>
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
-
-<style>
-:root {
-    --bg: #f4f4f4;
-    --text: #222;
-    --card: #ffffff;
-    --accent: #4A90E2;
-}
-
-body.dark-mode {
-    --bg: #121212;
-    --text: #ffffff;
-    --card: #1e1e1e;
-    --accent: #72aee6;
-}
-
-body {
-    margin: 0;
-    font-family: Arial, sans-serif;
-    background: var(--bg);
-    color: var(--text);
-}
-
-header {
-    text-align: center;
-    padding: 20px;
-}
-
-.container {
-    display: flex;
-    justify-content: center;
-    gap: 30px;
-    padding: 20px;
-    flex-wrap: wrap;
-}
-
-/* FORMULARIO */
-.form-section {
-    background: var(--card);
-    padding: 20px;
-    border-radius: 10px;
-    width: 350px;
-}
-
-/* CV */
-.cv-template {
-    background: white;
-    color: black;
-    width: 210mm;
-    min-height: 297mm;
-    padding: 15mm;
-    box-sizing: border-box;
-}
-
-input, textarea {
-    width: 100%;
-    margin-bottom: 10px;
-    padding: 8px;
-}
-
-button {
-    width: 100%;
-    padding: 10px;
-    border: none;
-    background: var(--accent);
-    color: white;
-    cursor: pointer;
-    font-weight: bold;
-}
-
-img {
-    width: 110px;
-    height: 110px;
-    border-radius: 50%;
-    object-fit: cover;
-}
-
-.section-title {
-    margin-top: 15px;
-    border-bottom: 2px solid #4A90E2;
-}
-
-/* Ocultar formulario en PDF */
-@media print {
-    header, .form-section {
-        display: none;
-    }
-}
-</style>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>tarjeta</title>
+	<link rel="stylesheet" type="text/css" href="style.css">
 </head>
-
 <body>
-
-<header>
-<h1>Formulario Para Curriculum</h1>
-<button id="darkBtn">🌑 Modo Oscuro</button>
-</header>
-
 <div class="container">
+	<div class="controls">
+		<input type="text" id="nameInput" placeholder="Nombre del usuario">
+		<input type="text" id="cargoInput" placeholder="Cargo del usuario">
+		<input type="color" id="colorPicker" value="#6366f1">
+		<select id="fontSelector">
+			<option value="Arial, sans-serif">Arial</option>
+			<option value="'Times New Roman', serif">Times New Roman</option>
+			<option value="Courier New, monospace">Courier New</option>
+	  		<option value="Verdana, sans-serif">Verdana</option>
+	    	<option value="Georgia, serif">Georgia</option>
+	    	<option value="Tahoma, sans-serif">Tahoma</option>
+	    	<option value="'Trebuchet MS', sans-serif">Trebuchet MS</option>
+		</select>
+		<p id="texto">Texto de ejemplo para cambiar fuente.</p>
 
-<div class="form-section">
-
-<input type="file" id="photo">
-
-<input type="text" id="name" placeholder="Nombre Completo">
-<input type="text" id="role" placeholder="Profesión">
-<input type="email" id="email" placeholder="Correo">
-<input type="text" id="phone" placeholder="Teléfono">
-<input type="text" id="address" placeholder="Dirección">
-
-<textarea id="about" placeholder="Perfil Profesional"></textarea>
-<textarea id="education" placeholder="Educación"></textarea>
-<textarea id="experience" placeholder="Experiencia Laboral"></textarea>
-
-<input type="text" id="skills" placeholder="Habilidades (separadas por coma)">
-<input type="text" id="languages" placeholder="Idiomas (separados por coma)">
-
-<button onclick="downloadPDF()">Descargar PDF</button>
-
+	</div>
+	<div class="card" id="profileCard">
+		<div class="banner">
+			
+		</div>
+		<div class="avatar">
+			
+		</div>
+		<h2 id="displayName">Ingresa tu combre</h2>
+		<h3 id="displayCargo">Ingresa tu cargo</h3>
+		<p>Desarrollador Justin Hilario</p>
+	</div>
+	<button id="darkModeBtn">Modo oscuro 🌚</button>
 </div>
-
-<div id="preview" class="cv-template">
-
-<center>
-<img id="outPhoto" src="">
-</center>
-
-<h2 id="outName"></h2>
-<h4 id="outRole"></h4>
-
-<p id="outEmail"></p>
-<p id="outPhone"></p>
-<p id="outAddress"></p>
-
-<h3 class="section-title">Perfil</h3>
-<p id="outAbout"></p>
-
-<h3 class="section-title">Educación</h3>
-<p id="outEducation"></p>
-
-<h3 class="section-title">Experiencia</h3>
-<p id="outExperience"></p>
-
-<h3 class="section-title">Habilidades</h3>
-<ul id="outSkills"></ul>
-
-<h3 class="section-title">Idiomas</h3>
-<ul id="outLanguages"></ul>
-
-</div>
-
-</div>
-
-<script>
-
-document.addEventListener("DOMContentLoaded", function(){
-
-    const $ = (id) => document.getElementById(id);
-
-    function conectar(inputId, outputId){
-        $(inputId).addEventListener("input", function(){
-            $(outputId).textContent = this.value;
-        });
-    }
-
-    conectar("name", "outName");
-    conectar("role", "outRole");
-    conectar("email", "outEmail");
-    conectar("phone", "outPhone");
-    conectar("address", "outAddress");
-    conectar("about", "outAbout");
-    conectar("education", "outEducation");
-    conectar("experience", "outExperience");
-
-    $("skills").addEventListener("input", function(){
-        const lista = $("outSkills");
-        lista.innerHTML = "";
-        this.value.split(",").forEach(skill=>{
-            if(skill.trim() !== ""){
-                let li = document.createElement("li");
-                li.textContent = skill.trim();
-                lista.appendChild(li);
-            }
-        });
-    });
-
-    $("languages").addEventListener("input", function(){
-        const lista = $("outLanguages");
-        lista.innerHTML = "";
-        this.value.split(",").forEach(lang=>{
-            if(lang.trim() !== ""){
-                let li = document.createElement("li");
-                li.textContent = lang.trim();
-                lista.appendChild(li);
-            }
-        });
-    });
-
-    $("photo").addEventListener("change", function(e){
-        const reader = new FileReader();
-        reader.onload = function(){
-            $("outPhoto").src = reader.result;
-        }
-        if(e.target.files[0]){
-            reader.readAsDataURL(e.target.files[0]);
-        }
-    });
-
-    $("darkBtn").addEventListener("click", function(){
-        document.body.classList.toggle("dark-mode");
-
-        if(document.body.classList.contains("dark-mode")){
-        } else {
-            this.textContent = "🌙 Modo Oscuro";
-        }
-    });
-
-});
-
-function downloadPDF(){
-
-    const element = document.getElementById("preview");
-    const container = document.querySelector(".container");
-
-    // Guardar estilos originales
-    const originalDisplay = container.style.display;
-    const originalJustify = container.style.justifyContent;
-
-    // Quitar centrado SOLO para el PDF
-    container.style.display = "block";
-    container.style.justifyContent = "flex-start";
-
-    const options = {
-        margin: 0,
-        filename: "Mi_CV_Profesional.pdf",
-        image: { type: "jpeg", quality: 1 },
-        html2canvas: { 
-            scale: 3,
-            scrollY: 0
-        },
-        jsPDF: { 
-            unit: "mm",
-            format: "a4",
-            orientation: "portrait"
-        },
-        pagebreak: { mode: ['css', 'legacy'] }
-    };
-
-    html2pdf()
-        .set(options)
-        .from(element)
-        .save()
-        .then(() => {
-            // Restaurar estilos después
-            container.style.display = originalDisplay;
-            container.style.justifyContent = originalJustify;
-        });
-}
-
-</script>
-
+<script src="fuction.js"></script>
 </body>
 </html>
